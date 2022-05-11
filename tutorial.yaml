@@ -1,0 +1,86 @@
+#los comentarios se ponen así
+microservice: # de esta manera se convierte en un objeto con atributos dentro
+  app: user-authentication
+  port: 9000
+  version: 1.7
+
+# se pueden tener listas de los microservicios
+
+microservice:
+  - app: user-authentication
+    port: 9000
+    version: 1.7
+
+#podemos tener expresiones booleanas con yes o no
+
+microservice:
+  - app: user-authentication
+    port: 9000
+    version: 1.7
+    deployed: yes
+
+# más sobre las listas
+
+microservice:
+  - app: user-authentication
+    port: 9000
+    version: 1.7
+    deployed: yes
+  - app: shopping-cart
+    port: 9002
+    version:
+    - 1.9
+    - 2.0
+    - 2.1
+---
+# las versiones también podemos ponerlas en una lista así..
+
+microservice:
+  - app: user-authentication
+    port: 9000
+    version: 1.7
+    deployed: yes
+  - app: shopping-cart
+    port: 9002
+    version: [1.9, 2.0, 2.1]
+
+---
+# Vamos a ver un ejemplo real de configuración de kubernetes
+
+apiVersion: v1
+kind: pod
+metadata:   # es un objeto
+  name: nginx
+  labels:  # es un objeto
+    app: nginx
+spec:  # es un objeto
+  containers:  # los contenedores contienen listas de objetos
+    - name: nginx-container
+      image: nginx
+      ports:  # es otra lista
+      - containerPort: 80
+      volumeMounts:  # es una lista de objetos
+      - name: nginx-vol
+        mountPath: /u/html
+    - name: sidecar-container
+      image: curlimages/curl
+      command: ["/bin/sh"]
+      args: ["-c", "echo Hello from the sidecat container; sleep 300"]
+
+---
+# Cadenas de varias líneas( Multiline Strings)
+
+MultilineString: # poniendolo así , lo intterpreta como un texto de varias líneas
+  Esto es una cadena multilinea
+  y esta la siguiente cadena
+  y esta la siguiente
+
+--- # esto se usa para separar componentes
+
+# variables ambientales 
+
+command:
+  - /bin/sh
+  - ec 
+  - >-
+    mysql -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD -e 'SELECT 1' # el .$ es la variable ambiental
